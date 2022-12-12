@@ -1,4 +1,5 @@
 import { toHttps } from './util'
+import { getMusicUrl } from 'api'
 
 function filterSinger(singers) {
   if (!Array.isArray(singers) || !singers.length) {
@@ -26,6 +27,8 @@ export class Song {
 export function createSong(music) {
   const album = music.album || music.al || {}
   const duration = music.duration || music.dt
+  const url = getMusicUrl(music.id).then(res => (res.data[0].url
+  ))
   return new Song({
     id: music.id,
     name: music.name,
@@ -33,7 +36,7 @@ export function createSong(music) {
     album: album.name,
     image: toHttps(album.picUrl) || null,
     duration: duration / 1000,
-    url: `https://music.163.com/song/media/outer/url?id=${music.id}.mp3`
+    url: url
   })
 }
 
